@@ -4,51 +4,50 @@ const app = getApp()
 
 Page({
   data: {
-    motto: 'Hello World',
+    indicatorDots: true,
+    autoplay: true,
+    interval: 3000,
+    duration: 1000,
+    loadingHidden: false,
     userInfo: {},
-    hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    swiperCurrent: 0,
+    selectCurrent: 0,
+    categories: [],
+    activeCategoryId: 0,
+    goods: [],
+    scrollTop: "0",
+    loadingMoreHidden: true,
+    hasNoCoupons: true,
+    coupons: [],
+    searchInput: '',
   },
-  //事件处理函数
-  bindViewTap: function() {
-    wx.navigateTo({
-      url: '../logs/logs'
+  tabClick: function(e) {
+    this.setData({
+      activeCategoryId: e.currentTarget.id
+    });
+    this.getGoodList(this.data.activeCategoryId);
+  },
+  // 事件处理函数
+  swiperchange: function(e) {
+    this.setData({
+      swiperCurrent: e.detail.current
     })
   },
-  onLoad: function () {
-    if (app.globalData.userInfo) {
-      this.setData({
-        userInfo: app.globalData.userInfo,
-        hasUserInfo: true
-      })
-    } else if (this.data.canIUse){
-      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-      // 所以此处加入 callback 以防止这种情况
-      app.userInfoReadyCallback = res => {
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
-        })
-      }
-    } else {
-      // 在没有 open-type=getUserInfo 版本的兼容处理
-      wx.getUserInfo({
-        success: res => {
-          app.globalData.userInfo = res.userInfo
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
-        }
-      })
-    }
+  toDetailTap: function(e) {
+    // wx.navigateTo({
+    //   url: "/pages/goods-details/index?id="+e.currentTarget.dataset.id,
+    // })
   },
-  getUserInfo: function(e) {
-    console.log(e)
-    app.globalData.userInfo = e.detail.userInfo
+  tapBanner: function(e) {
+    // if(e.currentTarget.dataset.id != 0) {
+    //   wx.navigateTo({
+    //     url: "/pages/goods-details/index?id=" + e.currentTarget.dataset.id,
+    //   })
+    // }
+  },
+  bindTypeTap: function(e) {
     this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
+      selectCurrent: e.index
     })
   }
 })
